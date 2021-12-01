@@ -44,16 +44,26 @@ app.get("/token", async (req, res) => {
 
     res.json({response: response.data});
   } catch (error) {
+    res.status(500).json({message: error.message});
+  }
+});
+
+app.get("/profile", async (req, res) => {
+  const {access_token: accessToken} = req.query;
+
+  if (!accessToken) {
+    res.status(400).send("query string 'access_token' is empty");
+  }
+
+  const url = `/profile?access_token=${accessToken}`;
+
+  try {
+    const response: AxiosResponse = await axiosInstance.get(url);
+
+    res.json({response: response.data});
+  } catch (error) {
     res.status(500).json(error);
   }
 });
 
 exports.api = functions.https.onRequest(app);
-
-// // Start writing Firebase Functions
-// // https://firebase.google.com/docs/functions/typescript
-//
-// export const helloWorld = functions.https.onRequest((request, response) => {
-//   functions.logger.info("Hello logs!", {structuredData: true});
-//   response.send("Hello from Firebase!");
-// });
