@@ -1,31 +1,24 @@
 module.exports = {
-  root: true,
-  env: {
-    es6: true,
-    node: true,
-  },
-  extends: [
-    "eslint:recommended",
-    "plugin:import/errors",
-    "plugin:import/warnings",
-    "plugin:import/typescript",
-    "google",
-    "plugin:@typescript-eslint/recommended",
+  "root": true,
+  "parser": "@typescript-eslint/parser",
+  "plugins": ["@typescript-eslint"],
+  "extends": [
+    "plugin:@typescript-eslint/recommended"
   ],
-  parser: "@typescript-eslint/parser",
-  parserOptions: {
-    project: ["tsconfig.json", "tsconfig.dev.json"],
-    sourceType: "module",
-  },
-  ignorePatterns: [
+  "ignorePatterns": [
     "/lib/**/*", // Ignore built files.
   ],
-  plugins: [
-    "@typescript-eslint",
-    "import",
-  ],
-  rules: {
-    "quotes": ["error", "double"],
-    "import/no-unresolved": 0,
+  "rules": {
+    "max-len": ["error", { "code": 120 }],
+    "indent": ["error", 2],
+    "semi": ["error", "always", { "omitLastInOneLineBlock": true }],
+    "comma-dangle": ["error", "only-multiline"],
+    "object-curly-spacing": ["error", "always"],
+    "array-bracket-spacing": ["error", "never"],
+    "keyword-spacing": ["error", { "before": true, "after": true }],
+    "newline-before-return": ["error"],
+    "@typescript-eslint/type-annotation-spacing": ["error"],
+    "eqeqeq": ["error"],
+    "@typescript-eslint/ban-types": "off"
   },
 };
