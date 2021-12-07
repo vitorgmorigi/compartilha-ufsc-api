@@ -9,13 +9,15 @@ admin.initializeApp();
 
 const app = express();
 
+app.use(express.json());
+
 const axiosInstance = axios.create({
   baseURL: envs.host,
   timeout: 20000,
   headers: { "X-Custom-Header": "foobar" },
 });
 
-app.get("/token", async (req, res) => {
+app.get("/token", async (req: express.Request, res: express.Response) => {
   const { code } = req.query;
 
   if (!code) {
