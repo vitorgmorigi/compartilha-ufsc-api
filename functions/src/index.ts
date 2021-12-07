@@ -1,23 +1,13 @@
-import { config } from "dotenv";
-config();
-
 import axios, { AxiosResponse } from "axios";
 import * as functions from "firebase-functions";
 import * as admin from "firebase-admin";
-
 import * as express from "express";
+
+import { envs } from "./config";
 
 admin.initializeApp();
 
 const app = express();
-
-const envs = {
-  client_id: process.env.CLIENT_ID,
-  client_secret: process.env.CLIENT_SECRET,
-  redirect_uri: process.env.REDIRECT_URI,
-  host: process.env.HOST,
-  grant_type: process.env.GRANT_TYPE,
-};
 
 const axiosInstance = axios.create({
   baseURL: envs.host,
