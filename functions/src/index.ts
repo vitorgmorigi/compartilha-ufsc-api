@@ -29,7 +29,7 @@ app.get("/token", async (req, res) => {
   const { code } = req.query;
 
   if (!code) {
-    res.status(400).send("query string 'code' is empty");
+    res.status(400).json({ message: "query string 'code' is empty" });
   }
 
   const url = "/token?"
@@ -44,7 +44,7 @@ app.get("/token", async (req, res) => {
 
     res.json({ response: response.data });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    res.status(500).json({ message: 'Internal server error' });
   }
 });
 
