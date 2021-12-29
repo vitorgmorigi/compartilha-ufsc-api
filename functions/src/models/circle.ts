@@ -15,6 +15,7 @@ export interface CircleDatabase {
     id?: string,
     created_by: string,
     name: string,
+    name_as_array: string[],
     password?: string,
     visibility: string
 }

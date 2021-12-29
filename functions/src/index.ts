@@ -1,13 +1,13 @@
 import axios, { AxiosResponse } from "axios";
 import * as functions from "firebase-functions";
 import * as admin from "firebase-admin";
+admin.initializeApp();
 import * as express from "express";
 
 import { envs } from "./config";
-import { ListCirclesRepository } from "./features/list-circles/list-circles-repository";
 import { CreateCircleRepository } from "./features/create-circle/create-circle-repository";
+import { listCirclesController } from "./features/list-circles";
 
-admin.initializeApp();
 
 const app = express();
 
@@ -61,10 +61,10 @@ app.get("/profile", async (req, res) => {
 });
 
 app.get("/circle", async (req, res) => {
-  const listCirclesRepository = new ListCirclesRepository();
+  const { name } = req.query;
 
   try {
-    const response = await listCirclesRepository.listAll();
+    const response = await listCirclesController.handle(name?.toString());
 
     res.json(response);
   } catch (error) {

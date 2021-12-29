@@ -13,8 +13,8 @@ export class ListCirclesRepository {
     };
   }
 
-  async listAll(): Promise<Circle[]> {
-    const snapshot = await this.db.get();
+  async list(name?: string): Promise<Circle[]> {
+    const snapshot = name ? await this.db.where("name_as_array", "array-contains", name).get() : await this.db.get();
     const result: Circle[] = [];
     snapshot.forEach(doc => {
       result.push(this.fromDatabase(doc));

@@ -6,6 +6,7 @@
     "serve": "npm run build -- --watch | firebase emulators:start --only functions",
     "shell": "npm run build && firebase functions:shell",
     "start": "npm run shell",
+    "stop": "lsof -t -i:5001 -i:5002 -i:8080 -i:9000 -i:9099 -i:9199 -i:9090 | xargs kill -9",
     "deploy": "firebase deploy --only functions",
     "logs": "firebase functions:log"
   },
