@@ -5,6 +5,7 @@ import * as express from "express";
 
 import { envs } from "./config";
 import { ListCirclesRepository } from "./features/list-circles/list-circles-repository";
+import { CreateCircleRepository } from "./features/create-circle/create-circle-repository";
 
 admin.initializeApp();
 
@@ -59,11 +60,25 @@ app.get("/profile", async (req, res) => {
   }
 });
 
-app.get("/circles", async (req, res) => {
+app.get("/circle", async (req, res) => {
   const listCirclesRepository = new ListCirclesRepository();
 
   try {
     const response = await listCirclesRepository.listAll();
+
+    res.json(response);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+app.post("/circle", async (req, res) => {
+  const createCircleRepository = new CreateCircleRepository();
+
+  const { circle } = req.body;
+
+  try {
+    const response = await createCircleRepository.create(circle);
 
     res.json(response);
   } catch (error) {
