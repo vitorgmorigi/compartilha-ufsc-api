@@ -1,3 +1,5 @@
 import { FirestoreService } from "./firestore";
 
-export { FirestoreService };
+const databaseInstance = FirestoreService.getInstance();
+
+export { databaseInstance };

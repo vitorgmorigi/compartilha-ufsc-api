@@ -7,6 +7,7 @@ import * as express from "express";
 import { envs } from "./config";
 import { CreateCircleRepository } from "./features/create-circle/create-circle-repository";
 import { listCirclesController } from "./features/list-circles";
+import { databaseInstance } from "./database";
 
 
 const app = express();
@@ -73,7 +74,7 @@ app.get("/circle", async (req, res) => {
 });
 
 app.post("/circle", async (req, res) => {
-  const createCircleRepository = new CreateCircleRepository();
+  const createCircleRepository = new CreateCircleRepository(databaseInstance);
 
   const { circle } = req.body;
 
