@@ -2,7 +2,7 @@ import { v4 as uuidv4 } from "uuid";
 
 import { transformToArray } from "../helpers/array";
 
-enum CircleVisibility {
+export enum CircleVisibility {
     Public = "public",
     Private = "private"
 }

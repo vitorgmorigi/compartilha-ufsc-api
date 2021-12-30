@@ -5,9 +5,8 @@ admin.initializeApp();
 import * as express from "express";
 
 import { envs } from "./config";
-import { CreateCircleRepository } from "./features/create-circle/create-circle-repository";
 import { listCirclesController } from "./features/list-circles";
-import { databaseInstance } from "./database";
+import { createCircleController } from "./features/create-circle";
 
 
 const app = express();
@@ -74,12 +73,10 @@ app.get("/circle", async (req, res) => {
 });
 
 app.post("/circle", async (req, res) => {
-  const createCircleRepository = new CreateCircleRepository(databaseInstance);
-
-  const { circle } = req.body;
+  const { name, password, visibility, createdBy } = req.body;
 
   try {
-    const response = await createCircleRepository.create(circle);
+    const response = await createCircleController.handle(name, password, visibility, createdBy);
 
     res.json(response);
   } catch (error) {
