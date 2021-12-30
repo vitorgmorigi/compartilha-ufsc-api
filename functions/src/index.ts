@@ -7,6 +7,7 @@ import * as express from "express";
 import { envs } from "./config";
 import { listCirclesController } from "./features/list-circles";
 import { createCircleController } from "./features/create-circle";
+import { auth } from "./middleware/auth";
 
 
 const app = express();
@@ -60,7 +61,7 @@ app.get("/profile", async (req, res) => {
   }
 });
 
-app.get("/circle", async (req, res) => {
+app.get("/circle", auth(), async (req, res) => {
   const { name } = req.query;
 
   try {
@@ -72,7 +73,7 @@ app.get("/circle", async (req, res) => {
   }
 });
 
-app.post("/circle", async (req, res) => {
+app.post("/circle", auth(), async (req, res) => {
   const { name, password, visibility, createdBy } = req.body;
 
   try {
