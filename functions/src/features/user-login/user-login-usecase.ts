@@ -1,6 +1,4 @@
-import { None, Option } from "monapt";
 import { CustomError } from "../../helpers/error";
-import { User } from "../../models/user";
 import { IdUfscLoginService } from "../../services/login/id-ufsc/id-ufsc-login-service";
 import { UserLoginRepository } from "./user-login-repository";
 import { UserLoginResponse } from "./user-login-response";

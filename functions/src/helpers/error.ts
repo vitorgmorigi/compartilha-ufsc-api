@@ -1,3 +1,4 @@
+import { HttpResponse } from "./http-response";
 import { Status } from "./status-codes";
 
 export class CustomError extends Error {
@@ -18,9 +19,7 @@ export class CustomError extends Error {
 export const handleError = (
   error: CustomError, 
   translator: { [key: string]: { statusCode: number; message?: string } }
-) => {
-//   console.error(error.data ? JSON.stringify(error.data, null, 2) : error);
-
+): HttpResponse => {
   const translated = translator?.[error.code] ??
    { statusCode: Status.InternalServerError, message: 'Internal Server Error' };
 

@@ -1,4 +1,4 @@
-import { handleError } from "../../helpers/error";
+import { CustomError, handleError } from "../../helpers/error";
 import { HttpResponse } from "../../helpers/http-response";
 import { Status } from "../../helpers/status-codes";
 import { UserLoginUsecase } from "./user-login-usecase";
@@ -20,7 +20,7 @@ export class UserLoginController {
 
       return new HttpResponse(Status.OK, user);
     } catch (error) {
-      return handleError(error, this.errorTranslator);
+      return handleError(error as CustomError, this.errorTranslator);
     }
   }
 
