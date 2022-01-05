@@ -1,4 +1,5 @@
 import * as admin from "firebase-admin";
+import { Option } from "monapt";
 import { DatabaseService } from "./database";
 
 export class FirestoreService implements DatabaseService {
@@ -26,6 +27,20 @@ export class FirestoreService implements DatabaseService {
       } as T));
 
       return result;
+    }
+
+    public async findByLogin<T extends { id: string }>(collection: string, login?: string): Promise<Option<T>> {
+      const db = this.getCollection(collection);
+      const snapshot = await db.where("login", "==", login).get();
+
+      const result: T[] = [];
+
+      snapshot.forEach((doc) => result.push({
+        id: doc.id,
+        ...doc.data()
+      } as T));
+
+      return Option(result[0]);
     }
 
     public async create<T>(collection: string, object: T): Promise<void> {

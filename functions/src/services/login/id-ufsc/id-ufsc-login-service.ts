@@ -45,8 +45,8 @@ export class IdUfscLoginService implements LoginService {
     const url = `/profile?access_token=${accessToken}`;
     
     const httpResponse: AxiosResponse = await this.axiosInstance.get(url);
-  
-    const { response: idUfscResponse }: { response: IdUfscGetProfileResponse } = httpResponse.data;
+
+    const { data: idUfscResponse }: { data: IdUfscGetProfileResponse } = httpResponse;
 
     const response = this.idUfscLoginParser.parseProfile(idUfscResponse);
   

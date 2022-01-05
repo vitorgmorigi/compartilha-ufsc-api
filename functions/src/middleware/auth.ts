@@ -1,25 +1,17 @@
-import axios from "axios";
 import { NextFunction, Request, Response } from "express";
-import { envs } from "../config";
-
-
-const axiosInstance = axios.create({
-  baseURL: envs.host,
-  timeout: 20000,
-  headers: { "X-Custom-Header": "foobar" },
-});
+import { loginServiceInstance } from "../services/login";
 
 export const auth = () => async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   const { authorization } = req.headers;
 
   if (!authorization) {
     res.status(400).json("header 'authorization' is empty");
+
+    return;
   }
 
-  const url = `/profile?access_token=${authorization}`;
-
   try {
-    await axiosInstance.get(url);
+    await loginServiceInstance.getProfile(authorization);
 
     next();
   } catch (error) {

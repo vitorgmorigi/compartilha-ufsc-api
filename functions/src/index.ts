@@ -7,7 +7,9 @@ import * as express from "express";
 import { envs } from "./config";
 import { listCirclesController } from "./features/list-circles";
 import { createCircleController } from "./features/create-circle";
+import { userLoginController } from "./features/user-login";
 import { auth } from "./middleware/auth";
+import { Option } from "monapt";
 
 
 const app = express();
@@ -59,6 +61,19 @@ app.get("/profile", async (req, res) => {
   } catch (error) {
     res.status(500).json(error);
   }
+});
+
+app.post("/login", async (req, res) => {
+  const accessToken = Option(req.headers.authorization);
+
+  if (accessToken.isEmpty) {
+    res.status(400).json("header 'authorization' is empty");
+
+    return;
+  }
+  const response = await userLoginController.handle(accessToken.get());
+
+  res.status(response.statusCode).json({ body: response.body });
 });
 
 app.get("/circle", auth(), async (req, res) => {
