@@ -11,7 +11,7 @@ export const auth = () => async (req: Request, res: Response, next: NextFunction
   }
 
   try {
-    await loginServiceInstance.getProfile(authorization);
+    res.locals.user = await loginServiceInstance.getProfile(authorization);
 
     next();
   } catch (error) {

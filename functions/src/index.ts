@@ -8,6 +8,7 @@ import { envs } from "./config";
 import { listCirclesController } from "./features/list-circles";
 import { createCircleController } from "./features/create-circle";
 import { userLoginController } from "./features/user-login";
+import { joinInACircleController } from "./features/join-in-a-circle";
 import { auth } from "./middleware/auth";
 import { Option } from "monapt";
 
@@ -95,6 +96,19 @@ app.post("/circle", auth(), async (req, res) => {
     const response = await createCircleController.handle(name, password, visibility, createdBy);
 
     res.json(response);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+app.post("/user/circle", auth(), async (req, res) => {
+  const { circle_id: circleId, circle_password: circlePassword } = req.body;
+  const userId = res.locals.user.id;
+
+  try {
+    const response = await joinInACircleController.handle(userId, circleId, circlePassword);
+
+    res.status(response.statusCode).json(response);
   } catch (error) {
     res.status(500).json(error);
   }

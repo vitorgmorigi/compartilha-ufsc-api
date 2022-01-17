@@ -1,11 +1,8 @@
-import { v4 as uuidv4 } from "uuid";
 import { transformToArray } from "../helpers/array";
 import { UserProfile } from "../services/login/contracts";
-// import { Circle } from "./circle";
 
 export interface User {
     id: string,
-    external_id: string,
     name: string,
     birthday: string,
     login: string,
@@ -18,7 +15,6 @@ export interface User {
 
 export interface UserDatabase {
     id: string,
-    external_id: string,
     created_at: string,
     login: string,
     cpf: string,
@@ -35,7 +31,6 @@ export function fromDatabase(
 ): User {
   return { 
     id: String(userDb.id), 
-    external_id: userDb.external_id,
     name: userDb.name, 
     birthday: userDb.birthday,
     login: userDb.login,
@@ -49,8 +44,7 @@ export function fromDatabase(
 
 export function toDatabase(user: UserProfile): UserDatabase {
   return {
-    id: uuidv4(),
-    external_id: user.id,
+    id: user.id,
     created_at: new Date().toISOString(),
     name: user.name,
     name_as_array: transformToArray(user.name),

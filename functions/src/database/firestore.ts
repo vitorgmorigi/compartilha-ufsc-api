@@ -1,4 +1,5 @@
 import * as admin from "firebase-admin";
+import { firestore } from "firebase-admin";
 import { Option } from "monapt";
 import { DatabaseService } from "./database";
 
@@ -29,9 +30,13 @@ export class FirestoreService implements DatabaseService {
       return result;
     }
 
-    public async findByLogin<T extends { id: string }>(collection: string, login?: string): Promise<Option<T>> {
+    public async findOne<T extends { id: string }>(
+      collection: string, 
+      field: string, 
+      value: unknown
+    ): Promise<Option<T>> {
       const db = this.getCollection(collection);
-      const snapshot = await db.where("login", "==", login).get();
+      const snapshot = await db.where(field, "==", value).get();
 
       const result: T[] = [];
 
@@ -43,8 +48,42 @@ export class FirestoreService implements DatabaseService {
       return Option(result[0]);
     }
 
-    public async create<T>(collection: string, object: T): Promise<void> {
-      await this.getCollection(collection).add(object);
+    public async findByLogin<T extends { id: string }>(collection: string, login?: string): Promise<Option<T>> {
+      const db = this.getCollection(collection);
+      const snapshot = await db.where("login", "==", login).get();
+
+
+
+      const result: T[] = [];
+
+      snapshot.forEach((doc) => result.push({
+        id: doc.id,
+        ...doc.data()
+      } as T));
+
+      return Option(result[0]);
+    }
+
+    public async create<T extends { id: string}>(collection: string, object: T): Promise<void> {
+      await this.getCollection(collection).doc(object.id).set(object);
+    }
+
+    public async update<T>(collection: string, docId: string, object: T): Promise<void> {
+      const doc = this.getCollection(collection).doc(docId);
+
+      await doc.update(object);
+    }
+
+    public async updateFieldArray<T>(collection: string, docId: string, field: string, value: T): Promise<void> {
+      const doc = this.getCollection(collection).doc(docId);
+
+      try {
+        await doc.update({ [field]: firestore.FieldValue.arrayUnion(value) });
+      } catch (error) {
+        console.error(error);
+        
+        throw error;
+      }
     }
 
     public getCollection(collection: string): FirebaseFirestore.CollectionReference {

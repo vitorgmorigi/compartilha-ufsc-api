@@ -1,7 +1,8 @@
 import { CustomError } from "../../helpers/error";
+import { UsecaseResponse } from "../../helpers/usecase-response";
+import { UserProfile } from "../../services/login/contracts";
 import { LoginService } from "../../services/login/login-service";
 import { UserLoginRepository } from "./user-login-repository";
-import { UserLoginResponse } from "./user-login-response";
 import { errorCodes } from "./user-login-utils";
 
 
@@ -11,7 +12,7 @@ export class UserLoginUsecase {
     private readonly loginService: LoginService
   ) {}
 
-  async execute(token: string): Promise<UserLoginResponse> {
+  async execute(token: string): Promise<UsecaseResponse<UserProfile>> {
     let idUfscProfile;
     try {
       idUfscProfile = await this.loginService.getProfile(token);

@@ -31,7 +31,8 @@ export function fromDatabase(
     id: String(circleDb.id), 
     createdBy: circleDb.created_by, 
     name: circleDb.name, 
-    visibility: circleDb.visibility as CircleVisibility
+    visibility: circleDb.visibility as CircleVisibility,
+    password: circleDb.password
   };
 }
 
