@@ -90,10 +90,10 @@ app.get("/circle", auth(), async (req, res) => {
 });
 
 app.post("/circle", auth(), async (req, res) => {
-  const { name, password, visibility, createdBy } = req.body;
+  const { name, password, visibility } = req.body;
 
   try {
-    const response = await createCircleController.handle(name, password, visibility, createdBy);
+    const response = await createCircleController.handle(name, password, visibility, res.locals.user.login);
 
     res.json(response);
   } catch (error) {
