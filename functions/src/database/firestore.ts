@@ -30,6 +30,24 @@ export class FirestoreService implements DatabaseService {
       return result;
     }
 
+    public async find<T extends { id: string }>(
+      collection: string, 
+      field: string, 
+      value: unknown
+    ): Promise<Option<T[]>> {
+      const db = this.getCollection(collection);
+      const snapshot = await db.where(field, "==", value).get();
+
+      const result: T[] = [];
+
+      snapshot.forEach((doc) => result.push({
+        id: doc.id,
+        ...doc.data()
+      } as T));
+
+      return Option(result);
+    }
+
     public async findOne<T extends { id: string }>(
       collection: string, 
       field: string, 
@@ -52,8 +70,6 @@ export class FirestoreService implements DatabaseService {
       const db = this.getCollection(collection);
       const snapshot = await db.where("login", "==", login).get();
 
-
-
       const result: T[] = [];
 
       snapshot.forEach((doc) => result.push({
@@ -64,7 +80,7 @@ export class FirestoreService implements DatabaseService {
       return Option(result[0]);
     }
 
-    public async create<T extends { id: string}>(collection: string, object: T): Promise<void> {
+    public async create<T extends { id: string }>(collection: string, object: T): Promise<void> {
       await this.getCollection(collection).doc(object.id).set(object);
     }
 

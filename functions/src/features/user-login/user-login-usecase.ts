@@ -23,7 +23,9 @@ export class UserLoginUsecase {
     const user = await this.userLoginRepository.get(idUfscProfile.login);
 
     if (user.isEmpty) {
-      await this.userLoginRepository.create(idUfscProfile);
+      const publicCircles = await this.userLoginRepository.getPublicCircles();
+
+      await this.userLoginRepository.create(idUfscProfile, publicCircles);
 
       return {  
         success: true,

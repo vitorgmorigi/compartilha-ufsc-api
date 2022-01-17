@@ -1,5 +1,6 @@
 import { None, Option } from "monapt";
 import { DatabaseService } from "../../database/database";
+import { Circle, CircleDatabase, CircleVisibility, fromDatabase as circleFromDatabase } from "../../models/circle";
 import { User, UserDatabase, fromDatabase, toDatabase } from "../../models/user";
 import { UserProfile } from "../../services/login/contracts";
 
@@ -16,8 +17,21 @@ export class UserLoginRepository {
     return None;
   }
 
-  async create(user: UserProfile): Promise<void> {
-    await this.database.create("user", toDatabase(user));
+  async create(user: UserProfile, publicCircles: Circle[]): Promise<void> {
+    await this.database.create("user", toDatabase(user, publicCircles));
+  }
+
+  async getPublicCircles(): Promise<Circle[]> {
+    const publicCirclesOption = await this.database
+      .find<CircleDatabase>("circle", "visibility", CircleVisibility.Public);
+
+    if (publicCirclesOption.isDefined) {
+      const publicCircles = publicCirclesOption.get();
+
+      return publicCircles.map(circle => circleFromDatabase(circle));
+    }
+
+    return [];
   }
 
 }
