@@ -10,9 +10,6 @@ export class JoinInACircleUsecase {
   ) {}
 
   async execute(userId: string, circleId: string, circlePassword?: string): Promise<UsecaseResponse<undefined>> {
-    console.log("INÍCIO DO USECASE");
-    console.log("Senha digitada: ", circlePassword);
-
     const circleOption = await this.joinInACircleRepository.findCircle(circleId);
 
     if (circleOption.isEmpty) {
@@ -20,8 +17,6 @@ export class JoinInACircleUsecase {
     }
 
     const circle = circleOption.get();
-
-    console.log("Senha no banco: ", circle?.password);
 
     if (circle.visibility === CircleVisibility.Private) {
       const isPasswordDefined = circlePassword !== undefined;
@@ -32,15 +27,13 @@ export class JoinInACircleUsecase {
 
       const isPasswordCorrect = circlePassword === circle?.password;
 
-      console.log("Check: ", circlePassword === circle?.password);
-
       if (!isPasswordCorrect) {
         throw new CustomError(errorCodes.CirclePasswordIncorrect, "A senha do círculo está incorreta!");
       }
     }
 
     try {
-      await this.joinInACircleRepository.join(userId, circleId);
+      await this.joinInACircleRepository.join(userId, circle);
     } catch (error) {
       throw new CustomError(errorCodes.JoinCircleError, "Ocorreu um erro ao tentar entrar no círculo");
     }

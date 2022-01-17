@@ -1,13 +1,13 @@
 import { None, Option } from "monapt";
 import { DatabaseService } from "../../database/database";
-import { Circle, CircleDatabase, fromDatabase } from "../../models/circle";
+import { Circle, CircleDatabase, fromDatabase, toDatabase } from "../../models/circle";
 
 
 export class JoinInACircleRepository {
   constructor(private readonly database: DatabaseService) {}
 
-  async join(userId: string, circleId: string): Promise<void> {
-    await this.database.updateFieldArray("user", userId, "circles", circleId);
+  async join(userId: string, circle: Circle): Promise<void> {
+    await this.database.updateFieldArray("user", userId, "circles", toDatabase(circle));
   }
 
   async findCircle(circleId: string): Promise<Option<Circle>> {
