@@ -3,15 +3,16 @@ import * as functions from "firebase-functions";
 import * as admin from "firebase-admin";
 admin.initializeApp();
 import * as express from "express";
+import { Option } from "monapt";
 
 import { envs } from "./config";
+import { auth } from "./middleware/auth";
+
 import { listCirclesController } from "./features/list-circles";
 import { createCircleController } from "./features/create-circle";
 import { userLoginController } from "./features/user-login";
 import { joinInACircleController } from "./features/join-in-a-circle";
-import { auth } from "./middleware/auth";
-import { Option } from "monapt";
-
+import { createCategoryController } from "./features/create-category";
 
 const app = express();
 
@@ -94,6 +95,18 @@ app.post("/circle", auth(), async (req, res) => {
 
   try {
     const response = await createCircleController.handle(name, password, visibility, res.locals.user.login);
+
+    res.json(response);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+app.post("/category", auth(), async (req, res) => {
+  const { name } = req.body;
+
+  try {
+    const response = await createCategoryController.handle(name, res.locals.user.login);
 
     res.json(response);
   } catch (error) {
