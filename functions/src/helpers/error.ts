@@ -21,7 +21,7 @@ export const handleError = (
   translator: { [key: string]: { statusCode: number; message?: string } }
 ): HttpResponse => {
   const translated = translator?.[error.code] ??
-   { statusCode: Status.InternalServerError, message: 'Internal Server Error' };
+   { statusCode: Status.InternalServerError, message: error.message };
 
   console.log("Error code: ", error.code);
   console.log("Translated: ", translator?.[error.code]);

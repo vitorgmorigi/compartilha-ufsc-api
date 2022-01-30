@@ -26,7 +26,7 @@ export function fromDatabase(
   
 export function toDatabase(category: Category): CategoryDatabase {
   return {
-    id: uuidv4(),
+    id: category.id ?? uuidv4(),
     created_by: category.createdBy,
     name: category.name,
     name_as_array: transformToArray(category.name),

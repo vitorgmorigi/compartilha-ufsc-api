@@ -36,7 +36,7 @@ export function fromDatabase(
     birthday: userDb.birthday,
     login: userDb.login,
     cpf: userDb.cpf,
-    circles: userDb.circles.map(circle => circleFromDatabase(circle)),
+    circles: userDb.circles?.map(circle => circleFromDatabase(circle)),
     createdAt: userDb.created_at,
     email: userDb.email,
     institutionalEmail: userDb.institutional_email,
