@@ -6,6 +6,8 @@ export abstract class DatabaseService {
     public abstract create: <T extends { id: string }>(collection: string, object: T) => Promise<void>
     public abstract find: <T extends { id: string }>(collection: string, field: string, value: unknown) 
     => Promise<Option<T[]>>
+    public abstract findIn: <T extends { id: string }>(collection: string, field: string, value: unknown) 
+    => Promise<Option<T[]>>
     public abstract findOne: <T extends { id: string }>(collection: string, field: string, value: unknown) 
     => Promise<Option<T>>
     public abstract findByLogin: <T extends { id: string }>(collection: string, name?: string) => Promise<Option<T>>

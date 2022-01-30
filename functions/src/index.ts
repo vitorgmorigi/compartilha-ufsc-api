@@ -14,6 +14,7 @@ import { userLoginController } from "./features/user-login";
 import { joinInACircleController } from "./features/join-in-a-circle";
 import { createCategoryController } from "./features/create-category";
 import { publishItemController } from "./features/publish-item";
+import { listFeedController } from "./features/list-feed";
 
 admin.firestore().settings({ ignoreUndefinedProperties: true });
 
@@ -122,7 +123,18 @@ app.post("/item", auth(), async (req, res) => {
   try {
     response = await publishItemController.handle(req.body, res.locals.user);
 
-    res.json(response);
+    res.status(response.statusCode).json(response);
+  } catch (error) {
+    res.status(response?.statusCode || 500).json(error);
+  }
+});
+
+app.get("/feed", auth(), async (req, res) => {
+  let response;
+  try {
+    response = await listFeedController.handle(res.locals.user.circles);
+
+    res.status(200).json(response);
   } catch (error) {
     res.status(response?.statusCode || 500).json(error);
   }

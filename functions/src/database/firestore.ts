@@ -1,6 +1,7 @@
 import * as admin from "firebase-admin";
 import { firestore } from "firebase-admin";
 import { Option } from "monapt";
+import { FirestoreOperators } from "../helpers/firestore-operators";
 import { DatabaseService } from "./database";
 
 export class FirestoreService implements DatabaseService {
@@ -31,12 +32,30 @@ export class FirestoreService implements DatabaseService {
     }
 
     public async find<T extends { id: string }>(
-      collection: string, 
+      collection: string,
       field: string, 
       value: unknown
     ): Promise<Option<T[]>> {
       const db = this.getCollection(collection);
-      const snapshot = await db.where(field, "==", value).get();
+      const snapshot = await db.where(field, FirestoreOperators.EQUAL, value).get();
+
+      const result: T[] = [];
+
+      snapshot.forEach((doc) => result.push({
+        id: doc.id,
+        ...doc.data()
+      } as T));
+
+      return Option(result);
+    }
+
+    public async findIn<T extends { id: string }>(
+      collection: string,
+      field: string, 
+      value: unknown
+    ): Promise<Option<T[]>> {
+      const db = this.getCollection(collection);
+      const snapshot = await db.where(field, FirestoreOperators.IN, value).get();
 
       const result: T[] = [];
 
@@ -54,7 +73,7 @@ export class FirestoreService implements DatabaseService {
       value: unknown
     ): Promise<Option<T>> {
       const db = this.getCollection(collection);
-      const snapshot = await db.where(field, "==", value).get();
+      const snapshot = await db.where(field, FirestoreOperators.EQUAL, value).get();
 
       const result: T[] = [];
 
@@ -68,7 +87,7 @@ export class FirestoreService implements DatabaseService {
 
     public async findByLogin<T extends { id: string }>(collection: string, login?: string): Promise<Option<T>> {
       const db = this.getCollection(collection);
-      const snapshot = await db.where("login", "==", login).get();
+      const snapshot = await db.where("login", FirestoreOperators.EQUAL, login).get();
 
       const result: T[] = [];
 
