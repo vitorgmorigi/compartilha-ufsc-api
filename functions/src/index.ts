@@ -15,6 +15,7 @@ import { joinInACircleController } from "./features/join-in-a-circle";
 import { createCategoryController } from "./features/create-category";
 import { publishItemController } from "./features/publish-item";
 import { listFeedController } from "./features/list-feed";
+import { Circle } from "./models/circle";
 
 admin.firestore().settings({ ignoreUndefinedProperties: true });
 
@@ -131,8 +132,12 @@ app.post("/item", auth(), async (req, res) => {
 
 app.get("/feed", auth(), async (req, res) => {
   let response;
+
+  const circles = (req.query?.circles as string)?.split(",") 
+    || (res.locals.user.circles as Circle[]).map((circle) => circle.id); 
+
   try {
-    response = await listFeedController.handle(res.locals.user.circles);
+    response = await listFeedController.handle(circles);
 
     res.status(200).json(response);
   } catch (error) {
