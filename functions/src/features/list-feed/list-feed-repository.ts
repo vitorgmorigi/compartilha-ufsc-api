@@ -1,12 +1,10 @@
 import { DatabaseService } from "../../database/database";
-import { Circle } from "../../models/circle";
 import { fromDatabase, Item, ItemDatabase } from "../../models/item";
 
 export class ListFeedRepository {
   constructor(private readonly database: DatabaseService) {}
 
-  async list(circles: Circle[]): Promise<Item[]> {
-    const circleIds = circles.map((circle) => circle.id);
+  async list(circleIds: string[]): Promise<Item[]> {
     const items = await this.database.findIn<ItemDatabase>("item", "circle.id", circleIds);
     const result: Item[] = [];
 
