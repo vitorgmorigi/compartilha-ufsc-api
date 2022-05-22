@@ -38,7 +38,7 @@ export function fromDatabase(
 
 export function toDatabase(circle: Circle): CircleDatabase {
   return {
-    id: uuidv4(),
+    id: circle.id ?? uuidv4(),
     created_by: circle.createdBy,
     name: circle.name,
     name_as_array: transformToArray(circle.name),
