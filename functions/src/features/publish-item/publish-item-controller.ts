@@ -16,9 +16,12 @@ export class PublishItemController {
     },
   };
 
-  async handle(requestData: PublishItemRequest, userProfile: UserProfile): Promise<HttpResponse> {
+  async handle(
+    requestData: PublishItemRequest, 
+    userProfile: UserProfile, 
+    image?: string): Promise<HttpResponse> {
     try {
-      await this.publishItemUsecase.execute(requestData, userProfile);
+      await this.publishItemUsecase.execute(requestData, userProfile, image);
 
       const response = {  
         success: true,

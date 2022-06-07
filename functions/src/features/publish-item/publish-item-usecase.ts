@@ -11,9 +11,11 @@ import { errorCodes } from "./publish-item-utils";
 
 export class PublishItemUsecase {
 
-  constructor(public readonly publishItemRepository: PublishItemRepository) {}
+  constructor(
+    public readonly publishItemRepository: PublishItemRepository, 
+  ) {}
 
-  async execute(requestData: PublishItemRequest, userProfile: UserProfile): Promise<void> {
+  async execute(requestData: PublishItemRequest, userProfile: UserProfile, image?: string): Promise<void> {
     const expirationDate = new Date(requestData.expiration_date).getTime();
 
     if (expirationDate < Date.now()) {
@@ -27,12 +29,13 @@ export class PublishItemUsecase {
       id: uuidv4(),
       name: requestData.name,
       createdBy: userProfile as Omit<User, "circle">,
-      category: categoryFromDatabase(requestData.category as CategoryDatabase),
-      circle: circleFromDatabase(requestData.circle as CircleDatabase),
+      category: categoryFromDatabase(JSON.parse(requestData.category) as CategoryDatabase),
+      circle: circleFromDatabase(JSON.parse(requestData.circle) as CircleDatabase),
       conservationState: requestData.conservation_state,
       description: requestData.description,
       expirationDate: requestData.expiration_date,
-      localization: requestData.localization
+      localization: requestData.localization,
+      image: image || ""
     };
 
     return this.publishItemRepository.create(item, userProfile);

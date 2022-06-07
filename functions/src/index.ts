@@ -1,9 +1,18 @@
 import axios, { AxiosResponse } from "axios";
 import * as functions from "firebase-functions";
 import * as admin from "firebase-admin";
-admin.initializeApp();
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const serviceAccount = require("../credentials/compartilha-ufsc-e4828d320945.json");
+
+const BUCKET_NAME = "compartilha-ufsc.appspot.com";
+
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount),
+  storageBucket: BUCKET_NAME
+});
 import * as express from "express";
 import { Option } from "monapt";
+import * as multer from "multer"; 
 
 import { envs } from "./config";
 import { auth } from "./middleware/auth";
@@ -16,10 +25,23 @@ import { createCategoryController } from "./features/create-category";
 import { publishItemController } from "./features/publish-item";
 import { listFeedController } from "./features/list-feed";
 import { Circle } from "./models/circle";
+import { uploadImage } from "./middleware/upload-image";
 
 admin.firestore().settings({ ignoreUndefinedProperties: true });
 
 const app = express();
+
+const Multer = multer({
+  storage: multer.memoryStorage(),
+  limits: {
+    fileSize: 1024 * 1024 * 10 // 10 MB
+  },
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
+  startProcessing(req, busboy) {
+    req.rawBody ? busboy.end(req.rawBody) : req.pipe(busboy);
+  }
+});
 
 app.use(express.json());
 
@@ -119,10 +141,14 @@ app.post("/category", auth(), async (req, res) => {
   }
 });
 
-app.post("/item", auth(), async (req, res) => {
+app.post("/item", auth(), Multer.array("image"), uploadImage, async (req, res) => {
+  console.log("FILE: ", req.files);
+  console.log("BODY: ", req.body);
+  console.log("FIREBASE URL: ", res.locals.firebaseUrl);
+
   let response;
   try {
-    response = await publishItemController.handle(req.body, res.locals.user);
+    response = await publishItemController.handle(req.body, res.locals.user, res.locals.firebaseUrl);
 
     res.status(response.statusCode).json(response);
   } catch (error) {

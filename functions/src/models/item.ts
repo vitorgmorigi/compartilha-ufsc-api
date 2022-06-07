@@ -27,6 +27,7 @@ export interface Item {
     createdBy: Omit<User, "circles">,
     conservationState: ConservationState,
     category: Category,
+    image: string
 }
 
 export interface ItemDatabase {
@@ -40,6 +41,7 @@ export interface ItemDatabase {
     created_by: Omit<UserDatabase, "name_as_array" | "circles" | "created_at">,    
     conservation_state: ConservationState,
     category: CategoryDatabase,
+    image: string
 }
 
 export function fromDatabase(
@@ -54,7 +56,8 @@ export function fromDatabase(
     conservationState: itemDb.conservation_state,
     description: itemDb.description,
     expirationDate: itemDb.expiration_date,
-    localization: itemDb.localization 
+    localization: itemDb.localization,
+    image: itemDb.image 
   };
 }
     
@@ -79,6 +82,7 @@ export function toDatabase(item: Item, userProfile: UserProfile): ItemDatabase {
     conservation_state: item.conservationState,
     description: item.description,
     expiration_date: item.expirationDate,
-    localization: item.localization
+    localization: item.localization,
+    image: item.image
   };
 }
