@@ -156,14 +156,18 @@ app.post("/item", auth(), Multer.array("image"), uploadImage, async (req, res) =
   }
 });
 
-app.get("/feed", auth(), async (req, res) => {
+app.get("/circles/items", auth(), async (req, res) => {
   let response;
 
-  const circles = (req.query?.circles as string)?.split(",") 
-    || (res.locals.user.circles as Circle[]).map((circle) => circle.id); 
+  const circles = (req.query?.circles as string)?.split(",").map(circle => circle.trim()) 
+    || (res.locals.user.circles as Circle[]).map((circle) => circle.id);
+    
+  const itemName = req.query?.itemName as string;
+
+  const categoryIds = req.query?.categoryIds as string;
 
   try {
-    response = await listFeedController.handle(circles);
+    response = await listFeedController.handle(circles, itemName, categoryIds);
 
     res.status(200).json(response);
   } catch (error) {
