@@ -5,8 +5,8 @@ export class CreateCircleController {
 
   constructor(private readonly createCircleUsecase: CreateCircleUsecase) {}
 
-  async handle(name: string, password: string, visibility: CircleVisibility, createdBy: string): Promise<void> {
-    return this.createCircleUsecase.execute(name, password, visibility, createdBy);
+  async handle(name: string, visibility: CircleVisibility, createdBy: string, password?: string): Promise<void> {
+    return this.createCircleUsecase.execute(name, visibility, createdBy, password);
   }
 
 }

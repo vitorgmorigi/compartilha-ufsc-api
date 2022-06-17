@@ -121,7 +121,7 @@ app.post("/circle", auth(), async (req, res) => {
   const { name, password, visibility } = req.body;
 
   try {
-    const response = await createCircleController.handle(name, password, visibility, res.locals.user.login);
+    const response = await createCircleController.handle(name, visibility, res.locals.user.login, password);
 
     res.json(response);
   } catch (error) {
