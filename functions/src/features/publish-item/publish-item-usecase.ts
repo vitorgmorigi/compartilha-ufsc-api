@@ -33,9 +33,10 @@ export class PublishItemUsecase {
       circle: circleFromDatabase(JSON.parse(requestData.circle) as CircleDatabase),
       conservationState: requestData.conservation_state,
       description: requestData.description,
-      expirationDate: requestData.expiration_date,
+      expirationDate: new Date(requestData.expiration_date),
       localization: requestData.localization,
-      image: image || ""
+      image: image || "",
+      createdAt: new Date()
     };
 
     return this.publishItemRepository.create(item, userProfile);

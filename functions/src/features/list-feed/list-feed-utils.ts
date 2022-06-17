@@ -8,7 +8,9 @@ interface ListFeedItemsResponse {
     name: string,
     image: string,
     category: ListFeedCategoryResponse,
-    createdBy: string,    
+    createdBy: string,
+    expirationDate: Date,
+    createdAt: Date    
 }
 
 interface ListFeedFiltersResponse {

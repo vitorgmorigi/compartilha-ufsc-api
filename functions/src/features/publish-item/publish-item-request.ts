@@ -4,7 +4,7 @@ import { User } from "../../models/user";
 export interface PublishItemRequest {
     name: string,
     description: string,
-    expiration_date: Date,
+    expiration_date: string,
     localization: string,
     circle: string,
     created_by: User,

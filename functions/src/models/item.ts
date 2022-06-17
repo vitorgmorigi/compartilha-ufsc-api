@@ -1,5 +1,6 @@
 import { v4 as uuidv4 } from "uuid";
 import { transformToArray } from "../helpers/array";
+import { toStringInFormatYYYYMMDD } from "../helpers/date";
 import { UserProfile } from "../services/login/contracts";
 import { 
   Category, 
@@ -27,7 +28,8 @@ export interface Item {
     createdBy: Omit<User, "circles">,
     conservationState: ConservationState,
     category: Category,
-    image: string
+    image: string,
+    createdAt: Date
 }
 
 export interface ItemDatabase {
@@ -35,13 +37,14 @@ export interface ItemDatabase {
     name: string,
     name_as_array: string[],
     description: string,
-    expiration_date: Date,
+    expiration_date: string,
     localization: string,
     circle: CircleDatabase,
     created_by: Omit<UserDatabase, "name_as_array" | "circles" | "created_at">,    
     conservation_state: ConservationState,
     category: CategoryDatabase,
-    image: string
+    image: string,
+    created_at: string
 }
 
 export function fromDatabase(
@@ -55,9 +58,10 @@ export function fromDatabase(
     circle: circleFromDatabase(itemDb.circle),
     conservationState: itemDb.conservation_state,
     description: itemDb.description,
-    expirationDate: itemDb.expiration_date,
+    expirationDate: new Date(itemDb.expiration_date),
     localization: itemDb.localization,
-    image: itemDb.image 
+    image: itemDb.image,
+    createdAt: new Date(itemDb.created_at) 
   };
 }
     
@@ -81,8 +85,9 @@ export function toDatabase(item: Item, userProfile: UserProfile): ItemDatabase {
     circle: circleToDatabase(item.circle),
     conservation_state: item.conservationState,
     description: item.description,
-    expiration_date: item.expirationDate,
+    expiration_date: toStringInFormatYYYYMMDD(item.expirationDate),
     localization: item.localization,
-    image: item.image
+    image: item.image,
+    created_at: toStringInFormatYYYYMMDD(item.createdAt)
   };
 }

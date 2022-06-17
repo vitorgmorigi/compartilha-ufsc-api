@@ -20,6 +20,8 @@ export class ListFeedController {
           name: item.category.name
         },
         createdBy: item.createdBy.login,
+        expirationDate: item.expirationDate,
+        createdAt: item.createdAt
       });
 
       const isNewCategory = !acc.filters.categories.map((category) => category.id)
