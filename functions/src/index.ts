@@ -26,6 +26,7 @@ import { publishItemController } from "./features/publish-item";
 import { listFeedController } from "./features/list-feed";
 import { Circle } from "./models/circle";
 import { uploadImage } from "./middleware/upload-image";
+import { getItemDetailsController } from "./features/get-item-details";
 
 admin.firestore().settings({ ignoreUndefinedProperties: true });
 
@@ -142,13 +143,22 @@ app.post("/category", auth(), async (req, res) => {
 });
 
 app.post("/item", auth(), Multer.array("image"), uploadImage, async (req, res) => {
-  console.log("FILE: ", req.files);
-  console.log("BODY: ", req.body);
-  console.log("FIREBASE URL: ", res.locals.firebaseUrl);
-
   let response;
   try {
     response = await publishItemController.handle(req.body, res.locals.user, res.locals.firebaseUrl);
+
+    res.status(response.statusCode).json(response);
+  } catch (error) {
+    res.status(response?.statusCode || 500).json(error);
+  }
+});
+
+app.get("/item/:itemId", auth(), async (req, res) => {
+  let response;
+  try {
+    const { itemId } = req.params;
+
+    response = await getItemDetailsController.handle(itemId);
 
     res.status(response.statusCode).json(response);
   } catch (error) {
