@@ -73,7 +73,11 @@ export class FirestoreService implements DatabaseService {
         field: string,
         operator: FirestoreOperators,
         value: unknown
-      } []
+      } [],
+      sort?: {
+        field: string,
+        direction: "asc" | "desc"
+      }
     ): Promise<Option<T[]>> {
       const db = this.getCollection(collection);
 
@@ -81,6 +85,10 @@ export class FirestoreService implements DatabaseService {
         .reduce((acc, filter) => acc.where(filter[1].field, filter[1].operator, filter[1].value), 
         db as firestore.Query<firestore.DocumentData>);
       
+      if (sort) {
+        query.orderBy(sort.field, sort.direction);
+      }
+
       const snapshot = await query.get();
 
       const result: T[] = [];

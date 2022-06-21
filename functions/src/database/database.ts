@@ -13,7 +13,11 @@ export abstract class DatabaseService {
           field: string,
           operator: FirestoreOperators,
           value: unknown
-        } []
+        } [],
+        sort?: {
+          field: string,
+          direction: "asc" | "desc"
+        }
       ) => Promise<Option<T[]>>
     public abstract findIn: <T extends { id: string }>(collection: string, field: string, value: unknown) 
     => Promise<Option<T[]>>
