@@ -171,6 +171,8 @@ app.get("/circles/items", auth(), async (req, res) => {
 
     res.status(200).json(response);
   } catch (error) {
+    console.error(error);
+
     res.status(response?.statusCode || 500).json(error);
   }
 });

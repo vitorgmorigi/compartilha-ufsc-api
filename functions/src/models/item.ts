@@ -1,6 +1,6 @@
+import * as admin from "firebase-admin";
 import { v4 as uuidv4 } from "uuid";
 import { transformToArray } from "../helpers/array";
-import { toStringInFormatYYYYMMDD } from "../helpers/date";
 import { UserProfile } from "../services/login/contracts";
 import { 
   Category, 
@@ -37,14 +37,14 @@ export interface ItemDatabase {
     name: string,
     name_as_array: string[],
     description: string,
-    expiration_date: string,
+    expiration_date: FirebaseFirestore.Timestamp,
     localization: string,
     circle: CircleDatabase,
     created_by: Omit<UserDatabase, "name_as_array" | "circles" | "created_at">,    
     conservation_state: ConservationState,
     category: CategoryDatabase,
     image: string,
-    created_at: string
+    created_at: FirebaseFirestore.Timestamp
 }
 
 export function fromDatabase(
@@ -58,10 +58,10 @@ export function fromDatabase(
     circle: circleFromDatabase(itemDb.circle),
     conservationState: itemDb.conservation_state,
     description: itemDb.description,
-    expirationDate: new Date(itemDb.expiration_date),
+    expirationDate: itemDb.expiration_date.toDate(),
     localization: itemDb.localization,
     image: itemDb.image,
-    createdAt: new Date(itemDb.created_at) 
+    createdAt: itemDb.created_at.toDate()
   };
 }
     
@@ -85,9 +85,9 @@ export function toDatabase(item: Item, userProfile: UserProfile): ItemDatabase {
     circle: circleToDatabase(item.circle),
     conservation_state: item.conservationState,
     description: item.description,
-    expiration_date: toStringInFormatYYYYMMDD(item.expirationDate),
+    expiration_date: admin.firestore.Timestamp.fromDate(item.expirationDate),
     localization: item.localization,
     image: item.image,
-    created_at: toStringInFormatYYYYMMDD(item.createdAt)
+    created_at: admin.firestore.Timestamp.fromDate(item.createdAt)
   };
 }
