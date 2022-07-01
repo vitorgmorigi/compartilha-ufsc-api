@@ -17,8 +17,8 @@ export class UserLoginRepository {
     return None;
   }
 
-  async create(user: UserProfile, publicCircles: Circle[]): Promise<void> {
-    await this.database.create("user", toDatabase(user, publicCircles));
+  async create(user: UserProfile): Promise<void> {
+    await this.database.create("user", toDatabase(user));
   }
 
   async getPublicCircles(): Promise<Circle[]> {

@@ -7,7 +7,7 @@ export class JoinInACircleRepository {
   constructor(private readonly database: DatabaseService) {}
 
   async join(userId: string, circle: Circle): Promise<void> {
-    await this.database.updateFieldArray("user", userId, "circles", toDatabase(circle));
+    await this.database.updateFieldArray("user", userId, "private_circles", toDatabase(circle));
   }
 
   async findCircle(circleId: string): Promise<Option<Circle>> {

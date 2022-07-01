@@ -166,11 +166,11 @@ app.get("/item/:itemId", auth(), async (req, res) => {
   }
 });
 
-app.get("/circles/items", auth(), async (req, res) => {
+app.get("/feed", auth(), async (req, res) => {
   let response;
 
-  const circles = (req.query?.circles as string)?.split(",").map(circle => circle.trim()) 
-    || (res.locals.user.circles as Circle[]).map((circle) => circle.id);
+  const circles = (req.query?.circles as string)?.split(",")?.map(circle => circle.trim()) 
+    || (res.locals.user.privateCircles as Circle[])?.map((circle) => circle.id);
     
   const itemName = req.query?.itemName as string;
 
