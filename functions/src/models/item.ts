@@ -25,7 +25,7 @@ export interface Item {
     expirationDate: Date,
     localization: string,
     circle: Circle,
-    createdBy: Omit<User, "circles">,
+    createdBy: Omit<User, "private_circles">,
     conservationState: ConservationState,
     category: Category,
     image: string,
