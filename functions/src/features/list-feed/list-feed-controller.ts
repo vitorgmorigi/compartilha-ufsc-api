@@ -15,10 +15,7 @@ export class ListFeedController {
         id: item.id,
         name: item.name,
         image: item.image,
-        category: {
-          id: item.category.id,
-          name: item.category.name
-        },
+        category: item.category.name,
         createdBy: item.createdBy.login,
         expirationDate: item.expirationDate,
         createdAt: item.createdAt

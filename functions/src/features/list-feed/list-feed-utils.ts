@@ -7,7 +7,7 @@ interface ListFeedItemsResponse {
     id: string,
     name: string,
     image: string,
-    category: ListFeedCategoryResponse,
+    category: string,
     createdBy: string,
     expirationDate: Date,
     createdAt: Date    
