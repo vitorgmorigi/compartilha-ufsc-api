@@ -1,4 +1,4 @@
-interface ListFeedCategoryResponse {
+interface ListFeedFiltersFieldResponse {
     id: string,
     name: string
 }
@@ -8,13 +8,15 @@ interface ListFeedItemsResponse {
     name: string,
     image: string,
     category: string,
+    circle: string,
     createdBy: string,
     expirationDate: Date,
     createdAt: Date    
 }
 
 interface ListFeedFiltersResponse {
-    categories: ListFeedCategoryResponse[]
+    categories: ListFeedFiltersFieldResponse[],
+    circles: ListFeedFiltersFieldResponse[],
 }
 
 export interface ListFeedResponse {

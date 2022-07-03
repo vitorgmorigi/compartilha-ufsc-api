@@ -169,15 +169,16 @@ app.get("/item/:itemId", auth(), async (req, res) => {
 app.get("/feed", auth(), async (req, res) => {
   let response;
 
-  const circles = (req.query?.circles as string)?.split(",")?.map(circle => circle.trim()) 
-    || (res.locals.user.privateCircles as Circle[])?.map((circle) => circle.id);
+  const circlesToFilter = (req.query?.circles as string)?.split(",")?.map(circle => circle.trim());
+  
+  const privateCircles = (res.locals.user.privateCircles as Circle[])?.map((circle) => circle.id);
     
   const itemName = req.query?.itemName as string;
 
   const categoryIds = req.query?.categoryIds as string;
 
   try {
-    response = await listFeedController.handle(circles, itemName, categoryIds);
+    response = await listFeedController.handle(circlesToFilter, privateCircles, itemName, categoryIds);
 
     res.status(200).json(response);
   } catch (error) {

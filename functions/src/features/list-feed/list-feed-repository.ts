@@ -5,29 +5,38 @@ import { fromDatabase, Item, ItemDatabase } from "../../models/item";
 export class ListFeedRepository {
   constructor(private readonly database: DatabaseService) {}
 
-  async list(privateCircleIds?: string[]): Promise<Item[]> {
-    const publicItems = await this.database.find<ItemDatabase>("item", "circle.visibility", "public");
-
+  async list(circleIds?: string[], privateCircleIds?: string[]): Promise<Item[]> {
     const result: Item[] = [];
+
+    if (circleIds) {
+      const items = await this.database.findIn<ItemDatabase>("item", "circle.id", circleIds);
+      
+      items.get().forEach(doc => {
+        result.push(fromDatabase(doc));
+      });
+
+      return result;
+    }
+
+    const publicItems = await this.database.find<ItemDatabase>("item", "circle.visibility", "public");
 
     let privateItems: Option<ItemDatabase[]> = None;
 
     if (privateCircleIds) {
       privateItems = await this.database.findIn<ItemDatabase>("item", "circle.id", privateCircleIds);
-      
-      privateItems.get().forEach(doc => {
+
+      if (privateItems.isDefined) {
+        privateItems.get().forEach(doc => {
+          result.push(fromDatabase(doc));
+        });
+      }
+    }
+    
+    if (publicItems.isDefined) {
+      publicItems.get().forEach(doc => {
         result.push(fromDatabase(doc));
       });
     }
-    
-    if (privateItems.isEmpty && publicItems.isEmpty) {
-      return result;
-    }
-
-    publicItems.get().forEach(doc => {
-      result.push(fromDatabase(doc));
-    });
-
 
     return result;
   }

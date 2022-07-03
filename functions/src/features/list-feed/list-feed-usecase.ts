@@ -6,8 +6,9 @@ export class ListFeedUsecase {
 
   constructor(public readonly listFeedRepository: ListFeedRepository) {}
 
-  async execute(circleIds?: string[], itemName?: string, categoryIds?: string): Promise<Item[]> {
-    let items = await this.listFeedRepository.list(circleIds);
+  async execute(circleIds?: string[], privateCircleIds?: string[], itemName?: string, categoryIds?: string): 
+  Promise<Item[]> {
+    let items = await this.listFeedRepository.list(circleIds, privateCircleIds);
 
     items = items.filter(item => new Date(item.expirationDate).getTime() > new Date().getTime());
 
