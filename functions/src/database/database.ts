@@ -5,6 +5,7 @@ export abstract class DatabaseService {
     public abstract getCollection: (collection: string) => unknown
     public abstract searchByNameOrListAll: <T extends { id: string }>(collection: string, name?: string) => Promise<T[]>
     public abstract create: <T extends { id: string }>(collection: string, object: T) => Promise<void>
+    public abstract getAllDocuments<T extends { id: string }>(collection: string): Promise<Option<T[]>>
     public abstract find: <T extends { id: string }>(collection: string, field: string, value: unknown) 
     => Promise<Option<T[]>>
     public abstract findV2: <T extends { id: string }>(

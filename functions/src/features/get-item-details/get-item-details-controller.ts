@@ -18,7 +18,9 @@ export class ListFeedController {
     try {
       const item = await this.getItemDetailsUsecase.execute(id);
 
-      delete item.createdBy.cpf;
+      if (item.createdBy?.cpf) {
+        delete item.createdBy.cpf;
+      }
 
       return new HttpResponse(Status.OK, item);
     } catch (error) {

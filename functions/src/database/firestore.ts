@@ -31,6 +31,20 @@ export class FirestoreService implements DatabaseService {
       return result;
     }
 
+    public async getAllDocuments<T extends { id: string }>(collection: string): Promise<Option<T[]>> {
+      const db = this.getCollection(collection);
+      const snapshot = await db.get();
+
+      const result: T[] = [];
+
+      snapshot.forEach((doc) => result.push({
+        id: doc.id,
+        ...doc.data()
+      } as T));
+
+      return Option(result);
+    }
+
     public async find<T extends { id: string }>(
       collection: string,
       field: string, 

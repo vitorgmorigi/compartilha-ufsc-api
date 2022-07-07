@@ -27,6 +27,7 @@ import { listFeedController } from "./features/list-feed";
 import { Circle } from "./models/circle";
 import { uploadImage } from "./middleware/upload-image";
 import { getItemDetailsController } from "./features/get-item-details";
+import { listCategoriesController } from "./features/list-categories";
 
 admin.firestore().settings({ ignoreUndefinedProperties: true });
 
@@ -104,6 +105,16 @@ app.post("/login", async (req, res) => {
   const response = await userLoginController.handle(accessToken.get());
 
   res.status(response.statusCode).json({ body: response.body });
+});
+
+app.get("/category", auth(), async (req, res) => {
+  try {
+    const response = await listCategoriesController.handle();
+
+    res.json(response);
+  } catch (error) {
+    res.status(500).json(error);
+  }
 });
 
 app.get("/circle", auth(), async (req, res) => {
