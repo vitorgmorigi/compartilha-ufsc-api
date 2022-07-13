@@ -2,7 +2,7 @@ import { v4 as uuidv4 } from "uuid";
 import { CustomError } from "../../helpers/error";
 import { CategoryDatabase, fromDatabase as categoryFromDatabase } from "../../models/category";
 import { CircleDatabase, fromDatabase as circleFromDatabase } from "../../models/circle";
-import { Item } from "../../models/item";
+import { Item, ItemStatus } from "../../models/item";
 import { User } from "../../models/user";
 import { UserProfile } from "../../services/login/contracts";
 import { PublishItemRepository } from "./publish-item-repository";
@@ -36,7 +36,8 @@ export class PublishItemUsecase {
       expirationDate: new Date(requestData.expiration_date),
       localization: requestData.localization,
       image: image || "",
-      createdAt: new Date()
+      createdAt: new Date(),
+      status: ItemStatus.AVAILABLE
     };
 
     return this.publishItemRepository.create(item, userProfile);

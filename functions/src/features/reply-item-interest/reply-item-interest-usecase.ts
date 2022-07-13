@@ -18,6 +18,12 @@ export class ReplyItemInterestUsecase {
       );
     }
 
-    return this.replyItemInterestRepository.update(itemInterestId, requestData.answer);
+    await this.replyItemInterestRepository.updateItemInterest(itemInterestId, requestData.answer);
+
+    if (requestData.answer === ItemInterestStatus.ACCEPTED) {
+      await this.replyItemInterestRepository.updateItemToDonatedStatus(requestData.itemId);
+    }
+
+    return;
   }
 }

@@ -11,6 +11,11 @@ import {
 import { Circle, CircleDatabase, toDatabase as circleToDatabase, fromDatabase as circleFromDatabase } from "./circle";
 import { User, UserDatabase, fromDatabase as userFromDatabase } from "./user";
 
+export enum ItemStatus {
+  DONATED = "donated",
+  AVAILABLE = "available"
+}
+
 export enum ConservationState {
     New = "Novo",
     NewCondition = "Estado de novo",
@@ -29,7 +34,8 @@ export interface Item {
     conservationState: ConservationState,
     category: Category,
     image: string,
-    createdAt: Date
+    createdAt: Date,
+    status: ItemStatus
 }
 
 export interface ItemDatabase {
@@ -44,7 +50,8 @@ export interface ItemDatabase {
     conservation_state: ConservationState,
     category: CategoryDatabase,
     image: string,
-    created_at: FirebaseFirestore.Timestamp
+    created_at: FirebaseFirestore.Timestamp,
+    status: ItemStatus
 }
 
 export function fromDatabase(
@@ -61,7 +68,8 @@ export function fromDatabase(
     expirationDate: itemDb.expiration_date.toDate(),
     localization: itemDb.localization,
     image: itemDb.image,
-    createdAt: itemDb.created_at.toDate()
+    createdAt: itemDb.created_at.toDate(),
+    status: itemDb.status
   };
 }
     
@@ -78,6 +86,7 @@ export function toDatabase(item: Item, userProfile: UserProfile): ItemDatabase {
 
   const response = {
     id: uuidv4(),
+    status: item.status,
     created_by: createdBy,
     name: item.name,
     name_as_array: transformToArray(item.name),

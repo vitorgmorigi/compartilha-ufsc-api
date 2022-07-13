@@ -1,5 +1,5 @@
 import { unnacent } from "../../helpers/unnacent";
-import { Item } from "../../models/item";
+import { Item, ItemStatus } from "../../models/item";
 import { ListFeedRepository } from "./list-feed-repository";
 
 export class ListFeedUsecase {
@@ -10,7 +10,10 @@ export class ListFeedUsecase {
   Promise<Item[]> {
     let items = await this.listFeedRepository.list(circleIds, privateCircleIds);
 
-    items = items.filter(item => new Date(item.expirationDate).getTime() > new Date().getTime());
+    items = items.filter(item => 
+      new Date(item.expirationDate).getTime() > new Date().getTime() 
+      && item.status !== ItemStatus.DONATED
+    );
 
     if (itemName) {
       items = items.filter((item) => unnacent(item.name.toLowerCase().trim())
