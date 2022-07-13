@@ -29,6 +29,7 @@ import { uploadImage } from "./middleware/upload-image";
 import { getItemDetailsController } from "./features/get-item-details";
 import { listCategoriesController } from "./features/list-categories";
 import { createItemInterestController } from "./features/create-item-interest";
+import { replyItemInterestController } from "./features/reply-item-interest";
 
 admin.firestore().settings({ ignoreUndefinedProperties: true });
 
@@ -165,6 +166,20 @@ app.post("/item-interest", auth(), async (req, res) => {
     console.error(error);
 
     res.status(500).send(error);
+  }
+});
+
+app.patch("/item-interest/:itemInterestId/reply", auth(), async (req, res) => {
+  const { answer, itemId } = req.body;
+  const { itemInterestId } = req.params;
+
+  let response;
+  try {
+    response = await replyItemInterestController.handle(itemInterestId, { answer, itemId });
+
+    res.json(response);
+  } catch (error) {
+    res.status(response?.statusCode || 500).send(error);
   }
 });
 
