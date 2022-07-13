@@ -76,7 +76,7 @@ export function toDatabase(item: Item, userProfile: UserProfile): ItemDatabase {
     name: userProfile.name
   };
 
-  return {
+  const response = {
     id: uuidv4(),
     created_by: createdBy,
     name: item.name,
@@ -85,9 +85,11 @@ export function toDatabase(item: Item, userProfile: UserProfile): ItemDatabase {
     circle: circleToDatabase(item.circle),
     conservation_state: item.conservationState,
     description: item.description,
-    expiration_date: admin.firestore.Timestamp.fromDate(item.expirationDate),
+    expiration_date: admin.firestore.Timestamp.fromDate(new Date(item.expirationDate)),
     localization: item.localization,
     image: item.image,
-    created_at: admin.firestore.Timestamp.fromDate(item.createdAt)
+    created_at: admin.firestore.Timestamp.fromDate(new Date(item.createdAt))
   };
+
+  return response;
 }

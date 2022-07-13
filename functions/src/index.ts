@@ -28,6 +28,7 @@ import { Circle } from "./models/circle";
 import { uploadImage } from "./middleware/upload-image";
 import { getItemDetailsController } from "./features/get-item-details";
 import { listCategoriesController } from "./features/list-categories";
+import { createItemInterestController } from "./features/create-item-interest";
 
 admin.firestore().settings({ ignoreUndefinedProperties: true });
 
@@ -150,6 +151,20 @@ app.post("/category", auth(), async (req, res) => {
     res.json(response);
   } catch (error) {
     res.status(500).json(error);
+  }
+});
+
+app.post("/item-interest", auth(), async (req, res) => {
+  const { item } = req.body;
+
+  try {
+    const response = await createItemInterestController.handle({ item }, res.locals.user);
+
+    res.json(response);
+  } catch (error) {
+    console.error(error);
+
+    res.status(500).send(error);
   }
 });
 
