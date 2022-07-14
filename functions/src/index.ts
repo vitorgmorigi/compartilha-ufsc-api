@@ -30,6 +30,7 @@ import { getItemDetailsController } from "./features/get-item-details";
 import { listCategoriesController } from "./features/list-categories";
 import { createItemInterestController } from "./features/create-item-interest";
 import { replyItemInterestController } from "./features/reply-item-interest";
+import { listCreatedItemsAndInterestsController } from "./features/list-created-items-and-interests";
 
 admin.firestore().settings({ ignoreUndefinedProperties: true });
 
@@ -226,6 +227,18 @@ app.get("/feed", auth(), async (req, res) => {
     console.error(error);
 
     res.status(response?.statusCode || 500).json(error);
+  }
+});
+
+app.get("/user/items", auth(), async (req, res) => {
+  const userId = res.locals.user.id;
+  
+  try {
+    const response = await listCreatedItemsAndInterestsController.handle(userId);
+
+    res.status(response.statusCode).json(response);
+  } catch (error) {
+    res.status(500).json(error);
   }
 });
 

@@ -85,7 +85,7 @@ export function toDatabase(item: Item, userProfile: UserProfile): ItemDatabase {
   };
 
   const response = {
-    id: uuidv4(),
+    id: item.id ?? uuidv4(),
     status: item.status,
     created_by: createdBy,
     name: item.name,
