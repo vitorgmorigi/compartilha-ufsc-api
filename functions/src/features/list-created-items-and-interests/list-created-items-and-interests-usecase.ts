@@ -2,9 +2,8 @@ import { Item, ItemStatus } from "../../models/item";
 import { ItemInterest, ItemInterestStatus } from "../../models/item-interest";
 import { ListCreatedItemsAndInterestsRepository } from "./list-created-items-and-interests-repository";
 
-type ItemWithInterested = {
-    item: Item,
-    interested: Omit<ItemInterest, "item">[]
+type ItemWithInterested = Item & {
+    itemInterests: Omit<ItemInterest, "item">[]
 }
 
 export class ListCreatedItemsAndInterestsUsecase {
@@ -22,7 +21,7 @@ export class ListCreatedItemsAndInterestsUsecase {
     const itemInterested = await this.listCreatedItemsAndInterestsRepository.listItemInterested(userId);
 
     const itemWithInterested: ItemWithInterested[] = items.map((item) => {
-      const interested: Omit<ItemInterest, "item">[] = itemInterested
+      const itemInterests: Omit<ItemInterest, "item">[] = itemInterested
         .filter((interest) => interest.item.id === item.id && interest.status === ItemInterestStatus.PENDING)
         .map((interest) => {
           return {
@@ -33,8 +32,8 @@ export class ListCreatedItemsAndInterestsUsecase {
         });
       
       return {
-        item,
-        interested
+        ...item,
+        itemInterests
       };
     });
 

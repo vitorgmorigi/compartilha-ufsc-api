@@ -10,7 +10,7 @@ export class ListCreatedItemsAndInterestsController {
   Promise<HttpResponse> {
     const itemsWithInterests = await this.listCreatedItemsAndInterestsUsecase.execute(userId);
 
-    return new HttpResponse(Status.OK, itemsWithInterests);
+    return new HttpResponse(Status.OK, { items: itemsWithInterests });
   }
 
 }
