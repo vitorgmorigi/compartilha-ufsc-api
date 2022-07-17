@@ -31,6 +31,7 @@ import { listCategoriesController } from "./features/list-categories";
 import { createItemInterestController } from "./features/create-item-interest";
 import { replyItemInterestController } from "./features/reply-item-interest";
 import { listCreatedItemsAndInterestsController } from "./features/list-created-items-and-interests";
+import { deleteItemController } from "./features/delete-item";
 
 admin.firestore().settings({ ignoreUndefinedProperties: true });
 
@@ -201,6 +202,19 @@ app.get("/item/:itemId", auth(), async (req, res) => {
     const { itemId } = req.params;
 
     response = await getItemDetailsController.handle(itemId);
+
+    res.status(response.statusCode).json(response);
+  } catch (error) {
+    res.status(response?.statusCode || 500).json(error);
+  }
+});
+
+app.delete("/item/:itemId", auth(), async (req, res) => {
+  let response;
+  try {
+    const { itemId } = req.params;
+
+    response = await deleteItemController.handle(itemId, res.locals.user.id);
 
     res.status(response.statusCode).json(response);
   } catch (error) {

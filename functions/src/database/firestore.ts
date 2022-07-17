@@ -169,6 +169,12 @@ export class FirestoreService implements DatabaseService {
       }
     }
 
+    public async delete(collection: string, docId: string): Promise<void> {
+      const doc = this.getCollection(collection).doc(docId);
+
+      await doc.delete();
+    }
+
     public getCollection(collection: string): FirebaseFirestore.CollectionReference {
       return admin.firestore().collection(collection);
     }

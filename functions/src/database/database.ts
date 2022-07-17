@@ -27,4 +27,5 @@ export abstract class DatabaseService {
     public abstract findByLogin: <T extends { id: string }>(collection: string, name?: string) => Promise<Option<T>>
     public abstract update: <T>(collection: string, docId: string, object: T) => Promise<void>
     public abstract updateFieldArray: <T>(collection: string, docId: string, field: string, value: T) => Promise<void>
+    public abstract delete(collection: string, docId: string): Promise<void>
 }
