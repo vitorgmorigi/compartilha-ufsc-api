@@ -7,4 +7,6 @@ export const envs = {
   redirect_uri: process.env.REDIRECT_URI,
   host: process.env.HOST,
   grant_type: process.env.GRANT_TYPE,
+  mailer_login: process.env.MAILER_LOGIN,
+  mailer_password: process.env.MAILER_PASSWORD,
 };
