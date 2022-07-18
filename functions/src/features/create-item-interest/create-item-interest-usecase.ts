@@ -31,8 +31,8 @@ export class CreateItemInterestUsecase {
     await this.createItemInterestRepository.create(itemInterest);
 
     await this.mailerService.sendMail(
-      `${itemInterest.item.createdBy.email}, ${itemInterest.interested.email}`, 
-      `Interesse no item ${itemInterest.item.name}`,
+      `${itemInterest.item.createdBy.email}, ${itemInterest.interested.email}, ${itemInterest.item.createdBy.institutionalEmail}, ${itemInterest.interested.institutionalEmail}`, 
+      `Interesse registrado no item ${itemInterest.item.name}`,
       // eslint-disable-next-line max-len
       `Criada conversa de e-mail para tratativa de interesse do item ${itemInterest.item.name} demostrado pelo usuário ${itemInterest.interested.name} (login: ${itemInterest.interested.login}).
       

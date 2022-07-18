@@ -33,7 +33,7 @@ export class ReplyItemInterestUsecase {
       const itemInterestValue = itemInterest.get();
       const emailAnswer = requestData.answer === ItemInterestStatus.ACCEPTED ? 'aceito' : 'recusado';
 
-      await this.mailerService.sendMail(`${itemInterestValue.interested.email}, ${itemInterestValue.item.createdBy.email}`, 
+      await this.mailerService.sendMail(`${itemInterestValue.interested.email}, ${itemInterestValue.item.createdBy.email}, ${itemInterestValue.interested.institutionalEmail}, ${itemInterestValue.item.createdBy.institutionalEmail}`, 
         `Interesse no item ${itemInterestValue.item.name} ${emailAnswer}`,
         `O interesse no item ${itemInterestValue.item.name} foi ${emailAnswer} pelo anunciante ${itemInterestValue.item.createdBy.name} (login: ${itemInterestValue.item.createdBy.login})`);
     }
