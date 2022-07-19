@@ -41,7 +41,7 @@ export class IdUfscLoginService implements LoginService {
     return response;
   }
   
-  async getProfile(accessToken: string): Promise<UserProfile> {
+  async getProfile(accessToken: string): Promise<Omit<UserProfile, "score">> {
     const url = `/profile?access_token=${accessToken}`;
     
     const httpResponse: AxiosResponse = await this.axiosInstance.get(url);
