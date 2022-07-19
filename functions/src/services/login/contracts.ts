@@ -6,6 +6,7 @@ export interface UserProfile {
     cpf: string,
     email: string,
     institutionalEmail: string,
+    score: number
 }
 
 export interface AccessToken {

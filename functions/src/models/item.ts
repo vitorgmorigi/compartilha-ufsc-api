@@ -46,7 +46,7 @@ export interface ItemDatabase {
     expiration_date: FirebaseFirestore.Timestamp,
     localization: string,
     circle: CircleDatabase,
-    created_by: Omit<UserDatabase, "name_as_array" | "private_circles" | "created_at">,    
+    created_by: Omit<UserDatabase, "name_as_array" | "private_circles" | "created_at" | "score">,    
     conservation_state: ConservationState,
     category: CategoryDatabase,
     image: string,
@@ -74,14 +74,14 @@ export function fromDatabase(
 }
     
 export function toDatabase(item: Item, userProfile: UserProfile): ItemDatabase {
-  const createdBy: Omit<UserDatabase, "name_as_array" | "private_circles" | "created_at"> = {
+  const createdBy: Omit<UserDatabase, "name_as_array" | "private_circles" | "created_at" | "score"> = {
     id: userProfile.id,
     birthday: userProfile.birthday,
     cpf: userProfile.cpf,
     email: userProfile.email,
     institutional_email: userProfile.institutionalEmail,
     login: userProfile.login,
-    name: userProfile.name
+    name: userProfile.name,
   };
 
   const response = {

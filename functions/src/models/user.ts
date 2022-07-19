@@ -12,6 +12,7 @@ export interface User {
     createdAt: string,
     email: string,
     institutionalEmail: string,
+    score: number
 }
 
 export interface UserDatabase {
@@ -25,6 +26,7 @@ export interface UserDatabase {
     private_circles: CircleDatabase[],
     email: string,
     institutional_email: string,
+    score: number
 }
 
 export function fromDatabase(
@@ -39,6 +41,7 @@ export function fromDatabase(
     createdAt: userDb.created_at,
     email: userDb.email,
     institutionalEmail: userDb.institutional_email,
+    score: userDb.score
   };
 }
 
@@ -54,5 +57,6 @@ export function toDatabase(user: UserProfile): UserDatabase {
     private_circles: [],
     email: user.email,
     institutional_email: user.institutionalEmail,
+    score: user.score
   };
 }

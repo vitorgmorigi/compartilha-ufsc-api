@@ -3,13 +3,15 @@ import { v4 as uuidv4 } from "uuid";
 import { ItemInterest, ItemInterestStatus } from "../../models/item-interest";
 import { UserProfile } from "../../services/login/contracts";
 import { MailerService } from "../../services/mailer/mailer-service";
+import { UpdateScoreUserRepository } from "../shared/update-score-user-repository";
 import { CreateItemInterestRepository } from "./create-item-interest-repository";
 import { CreateItemInterestRequest } from "./create-item-interest-utils";
 
 export class CreateItemInterestUsecase {
 
   constructor(
-    public readonly createItemInterestRepository: CreateItemInterestRepository, 
+    public readonly createItemInterestRepository: CreateItemInterestRepository,
+    public readonly updateScoreUserRepository: UpdateScoreUserRepository,  
     public readonly mailerService: MailerService
   ) {}
 
@@ -30,14 +32,17 @@ export class CreateItemInterestUsecase {
 
     await this.createItemInterestRepository.create(itemInterest);
 
-    await this.mailerService.sendMail(
-      `${itemInterest.item.createdBy.email}, ${itemInterest.interested.email}, ${itemInterest.item.createdBy.institutionalEmail}, ${itemInterest.interested.institutionalEmail}`, 
-      `Interesse registrado no item ${itemInterest.item.name}`,
-      // eslint-disable-next-line max-len
-      `Criada conversa de e-mail para tratativa de interesse do item ${itemInterest.item.name} demostrado pelo usuário ${itemInterest.interested.name} (login: ${itemInterest.interested.login}).
+    await Promise.all([
+      this.mailerService.sendMail(
+        `${itemInterest.item.createdBy.email}, ${itemInterest.interested.email}, ${itemInterest.item.createdBy.institutionalEmail}, ${itemInterest.interested.institutionalEmail}`, 
+        `Interesse registrado no item ${itemInterest.item.name}`,
+        // eslint-disable-next-line max-len
+        `Criada conversa de e-mail para tratativa de interesse do item ${itemInterest.item.name} demostrado pelo usuário ${itemInterest.interested.name} (login: ${itemInterest.interested.login}).
       
       Para aceitar ou recusar o interesse basta o anunciante acessar "Meus itens publicados" > procurar pelo item > clicar em "Visualizar Interessados" > Clicar em "Aceitar" ou "Recusar"
       `
-    );
+      ),
+      this.updateScoreUserRepository.updateUserScore(user.id, 10)   
+    ]);
   }
 }

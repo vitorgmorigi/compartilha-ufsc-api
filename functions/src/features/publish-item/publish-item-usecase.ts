@@ -5,6 +5,7 @@ import { CircleDatabase, fromDatabase as circleFromDatabase } from "../../models
 import { Item, ItemStatus } from "../../models/item";
 import { User } from "../../models/user";
 import { UserProfile } from "../../services/login/contracts";
+import { UpdateScoreUserRepository } from "../shared/update-score-user-repository";
 import { PublishItemRepository } from "./publish-item-repository";
 import { PublishItemRequest } from "./publish-item-request";
 import { errorCodes } from "./publish-item-utils";
@@ -12,7 +13,8 @@ import { errorCodes } from "./publish-item-utils";
 export class PublishItemUsecase {
 
   constructor(
-    public readonly publishItemRepository: PublishItemRepository, 
+    public readonly publishItemRepository: PublishItemRepository,
+    public readonly updateScoreUserRepository: UpdateScoreUserRepository,
   ) {}
 
   async execute(requestData: PublishItemRequest, userProfile: UserProfile, image?: string): Promise<void> {
@@ -40,6 +42,8 @@ export class PublishItemUsecase {
       status: ItemStatus.AVAILABLE
     };
 
-    return this.publishItemRepository.create(item, userProfile);
+    await this.publishItemRepository.create(item, userProfile);
+
+    await this.updateScoreUserRepository.updateUserScore(userProfile.id, 20);
   }
 }

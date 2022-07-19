@@ -12,14 +12,14 @@ export enum ItemInterestStatus {
 export interface ItemInterest {
   id: string,
   item: Item,
-  interested: Omit<User, "privateCircles" | "createdAt">,
+  interested: Omit<User, "privateCircles" | "createdAt" | "score">,
   status: ItemInterestStatus
 }
 
 export interface ItemInterestDatabase {
   id: string,
   item: ItemDatabase,
-  interested: Omit<UserDatabase, "name_as_array" | "private_circles" | "created_at">,
+  interested: Omit<UserDatabase, "name_as_array" | "private_circles" | "created_at" | "score">,
   status: ItemInterestStatus
 }
 

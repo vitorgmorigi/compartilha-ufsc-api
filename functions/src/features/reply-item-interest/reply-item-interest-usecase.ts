@@ -2,6 +2,7 @@
 import { CustomError } from "../../helpers/error";
 import { ItemInterestStatus } from "../../models/item-interest";
 import { MailerService } from "../../services/mailer/mailer-service";
+import { UpdateScoreUserRepository } from "../shared/update-score-user-repository";
 import { ReplyItemInterestRepository } from "./reply-item-interest-repository";
 import { errorCodes, ReplyItemInterestRequest } from "./reply-item-interest-utils";
 
@@ -9,6 +10,7 @@ export class ReplyItemInterestUsecase {
 
   constructor(
     public readonly replyItemInterestRepository: ReplyItemInterestRepository, 
+    public readonly updateScoreUserRepository: UpdateScoreUserRepository, 
     public readonly mailerService: MailerService
   ) {}
 
@@ -33,9 +35,13 @@ export class ReplyItemInterestUsecase {
       const itemInterestValue = itemInterest.get();
       const emailAnswer = requestData.answer === ItemInterestStatus.ACCEPTED ? 'aceito' : 'recusado';
 
-      await this.mailerService.sendMail(`${itemInterestValue.interested.email}, ${itemInterestValue.item.createdBy.email}, ${itemInterestValue.interested.institutionalEmail}, ${itemInterestValue.item.createdBy.institutionalEmail}`, 
-        `Interesse no item ${itemInterestValue.item.name} ${emailAnswer}`,
-        `O interesse no item ${itemInterestValue.item.name} foi ${emailAnswer} pelo anunciante ${itemInterestValue.item.createdBy.name} (login: ${itemInterestValue.item.createdBy.login})`);
+      await Promise.all([
+        this.mailerService.sendMail(`${itemInterestValue.interested.email}, ${itemInterestValue.item.createdBy.email}, ${itemInterestValue.interested.institutionalEmail}, ${itemInterestValue.item.createdBy.institutionalEmail}`, 
+          `Interesse no item ${itemInterestValue.item.name} ${emailAnswer}`,
+          `O interesse no item ${itemInterestValue.item.name} foi ${emailAnswer} pelo anunciante ${itemInterestValue.item.createdBy.name} (login: ${itemInterestValue.item.createdBy.login})`),
+        this.updateScoreUserRepository.updateUserScore(itemInterestValue.item.createdBy.id, 100),
+        this.updateScoreUserRepository.updateUserScore(itemInterestValue.interested.id, 70),
+      ]);
     }
 
     return;
