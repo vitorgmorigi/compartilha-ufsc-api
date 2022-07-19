@@ -17,7 +17,7 @@ export class UserLoginRepository {
     return None;
   }
 
-  async create(user: UserProfile): Promise<void> {
+  async create(user: UserProfile | Omit<UserProfile, "score">): Promise<void> {
     await this.database.create("user", toDatabase(user));
   }
 

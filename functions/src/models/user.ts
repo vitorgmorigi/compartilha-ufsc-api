@@ -45,7 +45,7 @@ export function fromDatabase(
   };
 }
 
-export function toDatabase(user: UserProfile): UserDatabase {
+export function toDatabase(user: UserProfile | Omit<UserProfile, "score">): UserDatabase {
   return {
     id: user.id,
     created_at: new Date().toISOString(),
@@ -57,6 +57,6 @@ export function toDatabase(user: UserProfile): UserDatabase {
     private_circles: [],
     email: user.email,
     institutional_email: user.institutionalEmail,
-    score: user.score
+    score: 0
   };
 }
