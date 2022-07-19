@@ -12,8 +12,8 @@ export class IdUfscLoginParser {
     return response;
   }
   
-  parseProfile(idUfscProfile: IdUfscGetProfileResponse): UserProfile {
-    const response: UserProfile = {
+  parseProfile(idUfscProfile: IdUfscGetProfileResponse): Omit<UserProfile, "score"> {
+    const response: Omit<UserProfile, "score"> = {
       id: idUfscProfile.id,
       cpf: idUfscProfile.attributes.cpf,
       birthday: idUfscProfile.attributes.dataNascimento,
