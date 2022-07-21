@@ -22,7 +22,7 @@ export class ListFeedRepository {
 
     let privateItems: Option<ItemDatabase[]> = None;
 
-    if (privateCircleIds) {
+    if (privateCircleIds && privateCircleIds.length > 0) {
       privateItems = await this.database.findIn<ItemDatabase>("item", "circle.id", privateCircleIds);
 
       if (privateItems.isDefined) {
